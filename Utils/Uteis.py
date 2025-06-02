@@ -1,7 +1,30 @@
+#Manipulação dos dados
 import pandas as pd
+
+#Gráficos
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+#Processa outliers
 from scipy.stats.mstats import winsorize
+
+#Pré-Processamento
+from sklearn.preprocessing import StandardScaler
+
+#Calculos matemáticos
+import numpy as np
+
+#Avaliação do modelo
+from sklearn.model_selection import RandomizedSearchCV,StratifiedKFold,cross_val_score
+
+#Auxilia na avaliação do modelo
+from scipy.stats import uniform, randint
+
+#Separação dos dados em treino e teste
+from sklearn.model_selection import train_test_split
+
+#Mátricas de avaliação
+from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_score, roc_auc_score, classification_report
 
 class TratamentoDados:
     def __init__(self):
@@ -70,6 +93,100 @@ class TratamentoDados:
         return dfTratado
     
     
+
+class AvalicaoModelo:
+    def __init__(self):
+        pass
+
+    def predicaoModelosArvores(self, modelo, X, y):
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+
+        model = modelo(random_state=42, class_weight = "balanced", max_depth=7)
+        model.fit(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+        acuracia = accuracy_score(y_test, y_pred)
+        rc = recall_score(y_test, y_pred)
+        precision =precision_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        
+        print("Modelo ", modelo)
+        print(f"Acurácia: {acuracia:.4f}")
+        print(f"Recall: {rc:.4f}")
+        print(f"F1-Score: {f1:.4f}")
+        print(f"Precision: {precision:.4f}")
+
+
+
+    def predicaoModeloRobustos(self, modelo, X, y):
+        # Dividir os dados em treino e teste
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+        contagemClasses = y_train.value_counts()
+        negativos = contagemClasses[0]
+        positivos = contagemClasses[1]
+        scale_pos_weight = negativos/positivos #servi para o modelo dar um foco maior na classe com menor numeros de dados na target
+        modeloNome = modelo.__name__ #Pega o nome do modelo
+    
+        if modeloNome == "LGBMClassifier":
+            model = modelo(scale_pos_weight=scale_pos_weight,learning_rate=0.1,random_state=42,verbose=-1)  # Silencia os logs do LightGBM
+        else:
+            model = modelo(scale_pos_weight=scale_pos_weight, learning_rate=0.1, random_state=42)
+        
+        #Treina com os dados
+        model.fit(X_train, y_train)
+
+        # Fazer previsões e calcular métricas
+        y_pred = model.predict(X_test)
+
+        #Calcula metricas principais
+        acuracia = accuracy_score(y_test, y_pred)
+        rc = recall_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        precision =precision_score(y_test, y_pred)
+        
+        #Mostra os resultados
+        print("Modelo ", modelo)
+        print(f"Acurácia: {acuracia:.4f}")
+        print(f"Recall: {rc:.4f}")
+        print(f"F1-Score: {f1:.4f}")
+        print(f"Precision: {precision:.4f}")
+        print(classification_report(y_test, y_pred))
+
+
+
+    def predicaoModelosLogistico(self, modelo, X, y):
+        # Dividir os dados em treino e teste
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+        
+        # Aplicar logaritmo nos dados (adicionando 1 para evitar log(0))
+        X_train_log = np.log1p(X_train)  # log1p = log(x + 1)
+        X_test_log = np.log1p(X_test)
+        
+        # Padronizar os dados
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(X_train_log)
+        X_test_scaled = scaler.transform(X_test_log)
+        
+        # Criar e treinar o modelo
+        model = modelo(class_weight='balanced', max_iter=1000, solver='lbfgs')
+        model.fit(X_train_scaled, y_train)
+        
+        # Fazer previsões e calcular métricas
+        y_pred = model.predict(X_test_scaled)
+        
+        acuracia = accuracy_score(y_test, y_pred)
+        rc = recall_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred)
+        
+        print("Modelo ", modelo)
+        print(f"Acurácia: {acuracia:.4f}")
+        print(f"Recall: {rc:.4f}")
+        print(f"F1-Score: {f1:.4f}")
+        print(f"Precision: {precision:.4f}")
+        print(classification_report(y_test, y_pred))
 
     
 
