@@ -26,6 +26,9 @@ from sklearn.model_selection import train_test_split
 #Mátricas de avaliação
 from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_score, roc_auc_score, classification_report
 
+#Calculo da curva ROC
+from sklearn.metrics import roc_curve, auc, confusion_matrix
+
 class TratamentoDados:
     def __init__(self):
         pass
@@ -154,6 +157,22 @@ class AvalicaoModelo:
         print(f"Precision: {precision:.4f}")
         print(classification_report(y_test, y_pred))
 
+    
+    def avaliacaoFinalDoModelo(self, melhorEstimador, X_test, y_test):
+        y_pred = melhorEstimador.predict(X_test)
+
+        acuracia = accuracy_score(y_test, y_pred)
+        rc = recall_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        precision =precision_score(y_test, y_pred)
+
+
+        print(f"Acurácia: {acuracia:.4f}")
+        print(f"Recall: {rc:.4f}")
+        print(f"F1-Score: {f1:.4f}")
+        print(f"Precision: {precision:.4f}")
+        print(classification_report(y_test, y_pred))
+
 
 
     def predicaoModelosLogistico(self, modelo, X, y):
@@ -241,4 +260,37 @@ class Graficos:
         corr = dfAnaliseExploratoria.select_dtypes(include="number").corr()
         plt.figure(figsize=(15, 5))
         sns.heatmap(corr, vmin=-1, vmax=1, annot=True)
+        plt.show()
+    
+    def curvaRoc(self, estimadorFinal, X_test, y_test):
+        #Prever probabilidades para a curva ROC
+        y_pred_prob = estimadorFinal.predict_proba(X_test)[:, 1]  # Probabilidades da classe positiva
+
+        #Calcular a curva ROC
+        fpr, tpr, thresholds = roc_curve(y_test, y_pred_prob)
+        roc_auc = auc(fpr, tpr)
+
+        #Plotar a curva ROC
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, color='blue', lw=2, label=f'Curva ROC (AUC = {roc_auc:.2f})')
+        plt.plot([0, 1], [0, 1], color='gray', linestyle='--', lw=2)
+        plt.xlabel('Taxa de Falsos Positivos (FPR)')
+        plt.ylabel('Taxa de Verdadeiros Positivos (TPR)')
+        plt.title('Curva ROC')
+        plt.legend(loc='lower right')
+        plt.show()
+
+    def matrizConfusao(self, estimadorFinal, X_test, y_test):
+        #Calcular a matriz de confusão
+        y_pred = estimadorFinal.predict(X_test)
+        cm = confusion_matrix(y_test, y_pred)
+
+        # 8. Plotar a matriz de confusão
+        plt.figure(figsize=(6, 6))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
+                    xticklabels=['Classe 0', 'Classe 1'],
+                    yticklabels=['Classe 0', 'Classe 1'])
+        plt.xlabel('Predito')
+        plt.ylabel('Verdadeiro')
+        plt.title('Matriz de Confusão')
         plt.show()
