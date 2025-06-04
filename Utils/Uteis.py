@@ -29,6 +29,10 @@ from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_sc
 #Calculo da curva ROC
 from sklearn.metrics import roc_curve, auc, confusion_matrix
 
+#Salvar o Modelo
+import joblib
+import os
+
 class TratamentoDados:
     def __init__(self):
         pass
@@ -294,3 +298,39 @@ class Graficos:
         plt.ylabel('Verdadeiro')
         plt.title('Matriz de Confusão')
         plt.show()
+
+
+class Modelo():
+    def __init__(self):
+        pass
+
+    def salvarModelo(self, modelo, caminhoArquivo):
+        """
+        Salva o modelo em um arquivo especificado.
+
+        Args:
+            modelo: O modelo de machine learning a ser salvo.
+            caminhoArquivo (str): Caminho completo para salvar o modelo.
+        """
+        diretorio = os.path.dirname(caminhoArquivo)
+        if diretorio and not os.path.exists(diretorio):
+            os.makedirs(diretorio)
+        joblib.dump(modelo, caminhoArquivo)
+        print(f"Modelo salvo em: {caminhoArquivo}")
+
+    
+    def carregarModelo(self, caminhoArquivo):
+        """
+        Carrega o modelo de um arquivo especificado.
+
+        Args:
+            caminho_arquivo (str): Caminho completo para o arquivo do modelo.
+        
+        Returns:
+            O modelo carregado.
+        """
+        if not os.path.exists(caminhoArquivo):
+            raise FileNotFoundError(f"Arquivo não encontrado: {caminhoArquivo}")
+        modelo = joblib.load(caminhoArquivo)
+        print(f"Modelo carregado de: {caminhoArquivo}")
+        return modelo
