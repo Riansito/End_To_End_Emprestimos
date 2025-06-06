@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado da Análise</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container result">
+        <h1>Resultado da Análise de Crédito</h1>
+        
+        <div class="result-box {% if result == 'APROVADO' %}approved{% else %}rejected{% endif %}">
+            <h2>{{ result }}</h2>
+            <p>Probabilidade: {{ probability }}</p>
+        </div>
+        
+        <div class="details">
+            <h3>Detalhes da Análise:</h3>
+            <ul>
+                {% for name, value in features.items() %}
+                <li><strong>{{ name|replace('_', ' ')|title }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <a href="/" class="btn">Nova Simulação</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação de Crédito</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Simulação de Crédito</h1>
+        <form action="/predict" method="POST">
+            <label for="loan_amount">Current Loan Amount:</label>
+            <input type="number" name="loan_amount" id="loan_amount" required>
+            
+            <label for="credit_score">Credit Score:</label>
+            <input type="number" name="credit_score" id="credit_score" required>
+
+            <label for="annual_income">Annual Income:</label>
+            <input type="number" name="annual_income" id="annual_income" required>
+            
+            <label for="years_job">Years in Current Job:</label>
+            <input type="number" name="years_job" id="years_job" required>
+            
+            <label for="home_ownership">Home Ownership:</label>
+            <select name="home_ownership" id="home_ownership" required>
+                {% for option in home_options %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="monthly_debt">Monthly Debt:</label>
+            <input type="number" name="monthly_debt" id="monthly_debt" required>
+            
+            <label for="credit_history">Years of Credit History:</label>
+            <input type="number" name="credit_history" id="credit_history" required>
+            
+            <label for="open_accounts">Number of Open Accounts:</label>
+            <input type="number" name="open_accounts" id="open_accounts" required>
+            
+            <label for="credit_problems">Number of Credit Problems:</label>
+            <input type="number" name="credit_problems" id="credit_problems" required>
+            
+            <label for="credit_balance">Current Credit Balance:</label>
+            <input type="number" name="credit_balance" id="credit_balance" required>
+            
+            <label for="max_credit">Maximum Open Credit:</label>
+            <input type="number" name="max_credit" id="max_credit" required>
+            
+            <label for="bankruptcies">Bankruptcies:</label>
+            <input type="number" name="bankruptcies" id="bankruptcies" required>
+            
+            <label for="tax_liens">Tax Liens:</label>
+            <input type="number" name="tax_liens" id="tax_liens" required>
+            
+            <label for="loan_term">Term:</label>
+            <select name="loan_term" id="loan_term" required>
+                <option value="Short Term">Short Term</option>
+                <option value="Long Term">Long Term</option>
+            </select>
+            
+            <label for="loan_purpose">Purpose:</label>
+            <select name="loan_purpose" id="loan_purpose" required>
+                {% for option in purpose_options %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
