@@ -20,6 +20,10 @@ O projeto está estruturado da seguinte forma:
 4. **Modelagem**: Treinamento de modelos supervisionados, como árvores de decisão e XGBoost, para prever inadimplência.
 5. **Avaliação**: Análise do desempenho do modelo utilizando métricas como acurácia, precisão, recall e F1-score.
 
+## Deploy do Projeto
+
+O projeto foi implantado para disponibilizar a solução de forma prática e acessível. O modelo preditivo pode ser acessado via uma interface web amigável, permitindo que usuários insiram dados e obtenham previsões de inadimplência em tempo real.
+
 ## Exemplos de Visualizações
 
 As visualizações ajudam a entender os resultados e o desempenho do modelo. Abaixo, apresentamos dois gráficos importantes:
@@ -56,10 +60,6 @@ A meta principal do projeto foi criar um modelo preditivo robusto e eficiente, c
    ```bash
    python main.py
    ```
-
-## Contribuições
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests com melhorias ou sugestões. Vamos construir juntos!
 
 
 
