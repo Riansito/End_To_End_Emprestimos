@@ -299,6 +299,27 @@ class Graficos:
         plt.title('Matriz de Confusão')
         plt.show()
 
+    def importanciaVariaveis(self, X_train, estimadorFinal):
+        colunasQueInfluenciamNaDecisão = {
+        "Colunas" : X_train.columns,
+        "Influencia" : estimadorFinal.feature_importances_
+        }
+        colunasQueInfluenciamNaDecisão = pd.DataFrame(colunasQueInfluenciamNaDecisão)
+        ordenadoPorColunasQueInfluenciamNaDecisão = colunasQueInfluenciamNaDecisão.sort_values(by = "Influencia", ascending=False)
+
+
+        influencias = ordenadoPorColunasQueInfluenciamNaDecisão["Influencia"] / ordenadoPorColunasQueInfluenciamNaDecisão["Influencia"].max()
+
+        # Criar um gradiente de cores (quanto maior a importância, mais escura a barra)
+        colors = plt.cm.Greens(influencias)  # Usando o colormap 'Blues'
+
+        # Plotar o gráfico de barras com cores baseadas na importância
+        plt.figure(figsize=(10, 6))
+        bars = plt.bar(ordenadoPorColunasQueInfluenciamNaDecisão["Colunas"], ordenadoPorColunasQueInfluenciamNaDecisão["Influencia"] , color=colors)
+        plt.xticks(range(len(ordenadoPorColunasQueInfluenciamNaDecisão["Colunas"])), ordenadoPorColunasQueInfluenciamNaDecisão["Colunas"].values, rotation=90)
+        plt.xlabel('Variáveis')
+        plt.ylabel('Importância')
+        plt.title('Importância das Variáveis no Modelo (Cores por Influência)')
 
 class Modelo():
     def __init__(self):
