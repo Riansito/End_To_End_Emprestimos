@@ -1,3 +1,5 @@
+
+
 # Projeto: Previsão de Inadimplência de Empréstimos
 
 Este projeto foi desenvolvido com o objetivo de prever inadimplências em empréstimos com base em um conjunto de dados fornecido. A abordagem é end-to-end, contemplando desde a análise exploratória até a modelagem preditiva.
@@ -28,16 +30,16 @@ O projeto foi implantado para disponibilizar a solução de forma prática e ace
 
 As visualizações ajudam a entender os resultados e o desempenho do modelo. Abaixo, apresentamos dois gráficos importantes:
 
-<div style="display: flex; justify-content: space-around;">
-  <div style="text-align: center;">
-    <img src="Imagens/Captura%20de%20tela%202025-06-03%20151646.png" alt="Curva ROC" width="400">
-    <p><b>Curva ROC:</b> Avalia o desempenho do modelo, mostrando a relação entre a taxa de verdadeiros positivos (TPR) e a taxa de falsos positivos (FPR). Uma curva mais próxima do canto superior esquerdo indica um modelo mais eficiente.</p>
-  </div>
-  <div style="text-align: center;">
-    <img src="Imagens/Captura%20de%20tela%202025-06-03%20151632.png" alt="Matriz de Confusão" width="400">
-    <p><b>Matriz de Confusão:</b> Exibe os resultados de classificação do modelo, detalhando verdadeiros positivos, falsos positivos, verdadeiros negativos e falsos negativos. Útil para identificar onde o modelo comete erros.</p>
-  </div>
-</div>
+<div style="display: flex; justify-content: space-around;">  
+  <div style="text-align: center;">  
+    <img src="Imagens/Captura%20de%20tela%202025-06-03%20151646.png" alt="Curva ROC" width="400">  
+    <p><b>Curva ROC:</b> Avalia o desempenho do modelo, mostrando a relação entre a taxa de verdadeiros positivos (TPR) e a taxa de falsos positivos (FPR). Uma curva mais próxima do canto superior esquerdo indica um modelo mais eficiente.</p>  
+  </div>  
+  <div style="text-align: center;">  
+    <img src="Imagens/Captura%20de%20tela%202025-06-03%20151632.png" alt="Matriz de Confusão" width="400">  
+    <p><b>Matriz de Confusão:</b> Exibe os resultados de classificação do modelo, detalhando verdadeiros positivos, falsos positivos, verdadeiros negativos e falsos negativos. Útil para identificar onde o modelo comete erros.</p>  
+  </div>  
+</div>  
 
 ## Objetivo do Modelo
 
@@ -48,19 +50,23 @@ A meta principal do projeto foi criar um modelo preditivo robusto e eficiente, c
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/Riansito/End_To_End_Emprestimos.git
+   git clone https://github.com/Riansito/End_To_End_Emprestimos.git  
    ```
-2. Instale as dependências necessárias (recomenda-se o uso de um ambiente virtual):
+2. Instale manualmente as dependências necessárias. Abaixo estão as bibliotecas utilizadas no projeto:
 
    ```bash
-   pip install -r requirements.txt
+   pip install pandas numpy seaborn matplotlib scikit-learn  
    ```
-3. Execute o script principal:
+3. Navegue até o pacote `APP`:
 
    ```bash
-   python main.py
+   cd APP  
    ```
+4. Execute o arquivo principal no Jupyter Notebook:
 
+   ```bash
+   jupyter notebook app.ipynb  
+   ```
 
 
 ## Contribuições
