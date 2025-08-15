@@ -54,21 +54,9 @@ class TratamentoDados:
             return int(anos[0])
         elif(anos[0] == "<"):
             return 0
-        
-    @staticmethod
-    def preencherValoresVaziosCreditScore(linha):
-        """
-        Trata os valores faltantes da coluna CreditScore com base no Loan Status
-        """
-        if pd.isnull(linha['Credit Score']):
-            if linha['Loan Status'] == 'Fully Paid':
-                return 716
-            elif linha['Loan Status'] == 'Charged Off':
-                return 2402
-        return linha['Credit Score']
     
 
-    def aplicarWinsorizacao(self, df, colunas=None, limites=(0.05, 0.05)):
+    def aplicarWinsorizacao(self, df, colunas=None, limites=(0, 0.01)):
         """
         Aplica winsorização nas colunas especificadas do DataFrame.
         
@@ -217,6 +205,18 @@ class Graficos:
     def __init__(self):
         pass  
 
+    def relacaoDeVariaveisComTargetBoxplot(self, df, colunas, ncols, nrows):
+
+        fig, axs = plt.subplots(figsize = (18, 8), ncols=ncols, nrows=nrows)
+        if nrows * ncols == 1:
+            axs = [axs]
+        for i, coluna in enumerate(colunas):
+            sns.boxplot(data=df, x="Loan Status", y = coluna, ax=axs[i])
+
+
+        plt.suptitle("Diferença entre variavies em relação a target")
+        plt.tight_layout()
+        plt.show()
     # Método de instância (sem @staticmethod)
     def graficoAnaliseOutlier(self, dfAnaliseOutlier):
         """
