@@ -33,6 +33,7 @@ from sklearn.metrics import roc_curve, auc, confusion_matrix
 import joblib
 import os
 
+plt.style.use("ggplot")
 class TratamentoDados:
     def __init__(self):
         pass
@@ -217,41 +218,40 @@ class Graficos:
         plt.suptitle("Diferença entre variavies em relação a target")
         plt.tight_layout()
         plt.show()
-    # Método de instância (sem @staticmethod)
-    def graficoAnaliseOutlier(self, dfAnaliseOutlier):
-        """
-        Gera boxplots para análise de outliers de colunas numéricas
-        
-        Parâmetros:
-        - dfAnaliseOutlier: DataFrame com os dados a serem analisados
-        """
-        colunasNumericas = dfAnaliseOutlier.select_dtypes(include="number").columns
-        
-        numeroLinhas = 4  
 
-        plt.figure(figsize=[15, 5 * numeroLinhas])
-        for i, coluna in enumerate(colunasNumericas):
-            plt.subplot(numeroLinhas, 3, i+1)  # Corrigido o layout
-            sns.boxplot(y=dfAnaliseOutlier[coluna])
-        plt.tight_layout()
-        plt.show()
+    def analiseUnivariada(self, df, tipo):
+        colunas = df.select_dtypes(include=tipo).columns
+        if tipo == "number": #Grafico especificos para colunas numericas
+            fig, ax = plt.subplots(figsize=(15, 8), ncols=4, nrows=3)
+            ax=ax.flatten()
+            plt.suptitle("Distribuição das colunas numéricas")
+            for i, c in enumerate(colunas):
+                ax[i].hist(df[c])
+                ax[i].set_xlabel(c)
+            plt.tight_layout()
+            plt.show()
+        else:
+            fig, ax = plt.subplots(figsize=(15, 10), ncols=2, nrows=2)
+            ax=ax.flatten()
+            plt.suptitle("Distribuição das colunas numéricas")
+            for i, c in enumerate(colunas):
+                quant_coluna = df[c].value_counts().reset_index()
+                quant_coluna.columns = [c, "Quantidade"]
+                sns.barplot(data=quant_coluna, x = c, y="Quantidade", ax=ax[i])
+                ax[i].set_xlabel(c)
+                ax[i].set_xticklabels(quant_coluna[c], rotation=45, ha='right')
+                for j, valor in enumerate(quant_coluna["Quantidade"]):
+                    ax[i].text(j, valor, str(valor), ha = "center", va = "bottom", fontsize = 10)#Adiciona os valores nos topos das barras
+            plt.tight_layout()
+            plt.show()
 
-    # Método de instância (sem @staticmethod)
-    def graficoAnaliseOutlierPorLoanStatus(self, dfAnaliseOutlier):
-        """
-        Gera boxplots comparando colunas numéricas por Loan Status
-        
-        Parâmetros:
-        - dfAnaliseOutlier: DataFrame com os dados a serem analisados
-        """
-        colunasNumericas = dfAnaliseOutlier.select_dtypes(include="number").drop(["Current Loan Amount", "Credit Score"], axis=1).columns
-        
-        numeroLinhas = 4  
-
-        plt.figure(figsize=[15, 5 * numeroLinhas])
-        for i, coluna in enumerate(colunasNumericas):
-            plt.subplot(numeroLinhas, 3, i+1)  # Corrigido o layout
-            sns.boxplot(x=dfAnaliseOutlier["Loan Status"], y=dfAnaliseOutlier[coluna])
+    def analiseUnivariadaBoxPlot(self,df, colunas):
+        fig, ax = plt.subplots(figsize=(15, 5), ncols=3, nrows=1)
+        ax=ax.flatten()
+        plt.suptitle("Colunas numericas outliers")
+        for i, c in enumerate(colunas):
+            sns.boxenplot(df[c], ax=ax[i])
+            ax[i].set_xlabel(c)
         plt.tight_layout()
         plt.show()
 
