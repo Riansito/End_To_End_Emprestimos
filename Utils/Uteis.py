@@ -245,6 +245,79 @@ class Graficos:
             plt.tight_layout()
             plt.show()
 
+    def analiseBivariada(self, df, tipo):
+        colunas = df.select_dtypes(include=tipo).columns
+        if tipo == "number": #Grafico especificos para colunas numericas
+            fig, axs = plt.subplots(figsize = (15, 8), ncols=4, nrows=3)
+            axs = axs.flatten()
+            plt.suptitle("Relação da média das colunas numericas com o status do Empréstimos")
+            for i, col in enumerate(colunas):
+                relacao_cols_target = df[["Loan Status", col]].groupby("Loan Status").mean().reset_index()
+                relacao_cols_target.columns = ["Loan Status", "Media"]
+                sns.barplot(x=relacao_cols_target["Loan Status"], y=relacao_cols_target["Media"], ax=axs[i])
+                axs[i].set_xlabel("Loan Status")
+                axs[i].set_ylabel(f"Media: {col}")
+
+            plt.tight_layout()
+            plt.show()
+        else:
+            fig, axs = plt.subplots(figsize = (15, 6), ncols=3, nrows=1)
+            axs = axs.flatten()
+            plt.suptitle("Relação das colunas categóricas com o status do Empréstimos")
+            for i, col in enumerate(colunas[1:]):
+                sns.countplot(x=col, hue='Loan Status', data=df, ax=axs[i])
+                axs[i].set_xlabel("Loan Status")
+                axs[i].set_ylabel(col)
+                axs[i].tick_params(axis='x', rotation=90)
+
+            plt.tight_layout()
+            plt.show()
+    
+    def analisePercentualCategoricasTarget(self, df):
+
+        # Função para adicionar rótulos de porcentagem
+        def add_percentage_labels(ax, precision=1):
+            for container in ax.containers:
+                labels = [f'{w:.{precision}f}%' if w > 4 else '' for w in container.datavalues]
+                ax.bar_label(container, labels=labels, label_type='center', 
+                            fontsize=8, color='white', fontweight='bold')
+
+        # Seleciona apenas colunas categóricas (excluindo a target se necessário)
+        colunas_categoricas = df.select_dtypes(include='object').columns
+        # Remove a coluna target se estiver incluída
+        colunas_categoricas = [col for col in colunas_categoricas if col != 'Loan Status']
+
+        fig, axs = plt.subplots(nrows=1, ncols=3, 
+                            figsize=(15, 5))
+        axs = axs.flatten()
+
+        plt.suptitle("Proporção de Inadimplência por Variáveis Categóricas")
+
+        for i, col in enumerate(colunas_categoricas):
+            if i < len(axs):
+                # Cria gráfico de barras empilhadas com porcentagem
+                sns.histplot(
+                    data=df,
+                    x=col,
+                    hue="Loan Status",
+                    stat="percent",
+                    multiple="fill",
+                    shrink=0.8,
+                    edgecolor='white',
+                    linewidth=1,
+                    ax=axs[i]
+                )
+            
+                axs[i].set_title(f'{col}', fontweight='bold', fontsize=12)
+                axs[i].set_xlabel("")
+                axs[i].set_ylabel("Proporção (%)", fontsize=10)
+                axs[i].tick_params(axis='x', rotation=90)
+
+                # Adiciona rótulos de porcentagem
+                add_percentage_labels(axs[i])
+        plt.tight_layout()
+        plt.show()
+
     def analiseUnivariadaBoxPlot(self,df, colunas):
         fig, ax = plt.subplots(figsize=(15, 5), ncols=3, nrows=1)
         ax=ax.flatten()
