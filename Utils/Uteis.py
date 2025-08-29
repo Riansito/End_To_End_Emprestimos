@@ -200,6 +200,27 @@ class AvalicaoModelo:
         print(f"Precision: {precision:.4f}")
         print(classification_report(y_test, y_pred))
 
+    def busca_aleatoria_modelo(self, modelo, parametros, X_train, y_train, n_iter=50, scoring='recall', cv_folds=5, n_jobs=-1, random_state=42):
+        cv = StratifiedKFold(cv_folds, shuffle=True, random_state=random_state)
+        
+        search = RandomizedSearchCV(
+            estimator=modelo,
+            param_distributions=parametros,
+            n_iter=n_iter,
+            scoring=scoring,
+            cv=cv,
+            verbose=2,
+            random_state=random_state,
+            n_jobs=n_jobs
+        )
+        
+        search.fit(X_train, y_train)
+        
+        resultados = pd.DataFrame(search.cv_results_)
+        resultadosOrdenados = resultados.sort_values(by="mean_test_score", ascending=False)
+        
+        return resultadosOrdenados, search.best_estimator_
+
     
 
 class Graficos:
@@ -329,15 +350,6 @@ class Graficos:
         plt.show()
 
     
-    def matrizCorrelacao(self, dfAnaliseExploratoria):
-        """
-        Vai mostra a correlação das variaveis numéricas
-        """
-
-        corr = dfAnaliseExploratoria.select_dtypes(include="number").corr()
-        plt.figure(figsize=(15, 5))
-        sns.heatmap(corr, vmin=-1, vmax=1, annot=True)
-        plt.show()
     
     def curvaRoc(self, estimadorFinal, X_test, y_test):
         #Prever probabilidades para a curva ROC
@@ -372,27 +384,6 @@ class Graficos:
         plt.title('Matriz de Confusão')
         plt.show()
 
-    def importanciaVariaveis(self, X_train, estimadorFinal):
-        colunasQueInfluenciamNaDecisão = {
-        "Colunas" : X_train.columns,
-        "Influencia" : estimadorFinal.feature_importances_
-        }
-        colunasQueInfluenciamNaDecisão = pd.DataFrame(colunasQueInfluenciamNaDecisão)
-        ordenadoPorColunasQueInfluenciamNaDecisão = colunasQueInfluenciamNaDecisão.sort_values(by = "Influencia", ascending=False)
-
-
-        influencias = ordenadoPorColunasQueInfluenciamNaDecisão["Influencia"] / ordenadoPorColunasQueInfluenciamNaDecisão["Influencia"].max()
-
-        # Criar um gradiente de cores (quanto maior a importância, mais escura a barra)
-        colors = plt.cm.Greens(influencias)  # Usando o colormap 'Blues'
-
-        # Plotar o gráfico de barras com cores baseadas na importância
-        plt.figure(figsize=(10, 6))
-        bars = plt.bar(ordenadoPorColunasQueInfluenciamNaDecisão["Colunas"], ordenadoPorColunasQueInfluenciamNaDecisão["Influencia"] , color=colors)
-        plt.xticks(range(len(ordenadoPorColunasQueInfluenciamNaDecisão["Colunas"])), ordenadoPorColunasQueInfluenciamNaDecisão["Colunas"].values, rotation=90)
-        plt.xlabel('Variáveis')
-        plt.ylabel('Importância')
-        plt.title('Importância das Variáveis no Modelo (Cores por Influência)')
 
 class Modelo():
     def __init__(self):
