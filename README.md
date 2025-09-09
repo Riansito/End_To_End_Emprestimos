@@ -32,18 +32,18 @@ As visualizações ajudam a entender os resultados e o desempenho do modelo. Aba
 
 <div style="display: flex; justify-content: space-around;">  
   <div style="text-align: center;">  
-    <img src="Imagens/Imagens/Captura de tela 2025-08-28 213545.png" alt="Curva ROC" width="400">  
+    <img src="Imagens/Captura de tela 2025-08-28 213545.png" alt="Curva ROC" width="400">  
     <p><b>Curva ROC:</b> Avalia o desempenho do modelo, mostrando a relação entre a taxa de verdadeiros positivos (TPR) e a taxa de falsos positivos (FPR). Uma curva mais próxima do canto superior esquerdo indica um modelo mais eficiente.</p>  
   </div>  
   <div style="text-align: center;">  
-    <img src="Imagens/Imagens/Captura de tela 2025-08-28 213534.png" alt="Matriz de Confusão" width="400">  
+    <img src="Imagens/Captura de tela 2025-08-28 213534.png" alt="Matriz de Confusão" width="400">  
     <p><b>Matriz de Confusão:</b> Exibe os resultados de classificação do modelo, detalhando verdadeiros positivos, falsos positivos, verdadeiros negativos e falsos negativos. Útil para identificar onde o modelo comete erros.</p>  
   </div>  
 </div>  
 
 ## Objetivo do Modelo
 
-A meta principal do projeto foi criar um modelo preditivo robusto e eficiente, capaz de identificar clientes com maior probabilidade de inadimplência. O foco foi equilibrar precisão e interpretabilidade para apoiar decisões estratégicas na concessão de crédito.
+A meta principal do projeto foi desenvolver um modelo preditivo robusto e eficiente, focado em identificar clientes com maior probabilidade de inadimplência, com o objetivo de reduzir os prejuízos da empresa provenientes de empréstimos não pagos.
 
 ## Como Executar o Projeto
 
